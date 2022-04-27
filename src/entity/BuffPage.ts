@@ -2,7 +2,7 @@ import { Table, Model, Column, DataType } from "sequelize-typescript";
 
 @Table({
     timestamps: false,
-    tableName: "buff_page_bk",
+    tableName: "buff_page",
 })
 export class BuffPage extends Model {
 
