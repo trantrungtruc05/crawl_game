@@ -65,7 +65,7 @@ export let crawlBuff = async (category) => {
 
     console.log(`CRAWL BUF ${category} total page:  ${totalPageReal}`)
 
-    while (page <= 3) {
+    while (page <= totalPageReal) {
         // sleep
         await snooze(4000);
 
@@ -116,17 +116,17 @@ export let crawlBuff = async (category) => {
     await BuffPage.destroy({where: {originalPrice : 0}});
 
     // get duplicate data
-    var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM buff_page bp  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT })
-    var buffIdDelete: any[] = [];
-    for(let i=0;i<duplicate.length;i++){
-        var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = '${(duplicate[i] as any).name}' and bp.category = 'csgo' order by original_price asc`, { type: QueryTypes.SELECT })
+    // var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM buff_page bp  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT })
+    // var buffIdDelete: any[] = [];
+    // for(let i=0;i<duplicate.length;i++){
+    //     var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = '${(duplicate[i] as any).name}' and bp.category = '${category}' order by original_price asc`, { type: QueryTypes.SELECT })
 
-        for(let i=1;i<findNameAsc.length;i++){
-            buffIdDelete.push((findNameAsc[i] as any).id);
-        }
-    }
+    //     for(let i=1;i<findNameAsc.length;i++){
+    //         buffIdDelete.push((findNameAsc[i] as any).id);
+    //     }
+    // }
     
-    await BuffPage.destroy({where: {id : buffIdDelete}});
+    // await BuffPage.destroy({where: {id : buffIdDelete}});
     
 
     console.log(`Insert DB Buff done`);
