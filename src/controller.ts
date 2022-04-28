@@ -16,3 +16,9 @@ export let crawlBuffDota = async (req, res) => {
     crawlBuffService.crawlBuff('dota2');
     return res.status(200).send('crawl_buff_dota2');
 };
+
+export let crawlBuffAll = async (req, res) => {
+    await crawlBuffService.crawlBuff('csgo');
+    await crawlBuffService.crawlBuff('dota2');
+    return res.status(200).send('crawl_buff_dota2');
+};

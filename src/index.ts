@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.route("/crawl_buff_csgo").get(controller.crawlBuffCsgo);
 app.route("/crawl_buff_dota").get(controller.crawlBuffDota);
+app.route("/crawl_buff_all").get(controller.crawlBuffAll);
 
 // start cron job
 // cron.schedule('* * */24 * * *', async () => {

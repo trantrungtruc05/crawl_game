@@ -10,7 +10,6 @@ const { QueryTypes } = require('sequelize');
 var buffItemLs: any[] = [];
 
 export let crawlBuff = async (category) => {
-
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     console.log(` CRAWL BUFF ${category}`);
@@ -105,10 +104,10 @@ export let crawlBuff = async (category) => {
 
     if(category === 'csgo'){
         console.log(`Clear table buff with category ${category}`);
-        await BuffPage.destroy({ where: {category: "csgo"}, truncate: false });
+        await BuffPage.destroy({ where: {category: "csgo"}, truncate: true });
     }else{
         console.log(`Clear table buff with category ${category}`);
-        await BuffPage.destroy({ where: {category: "dota2"}, truncate: false });
+        await BuffPage.destroy({ where: {category: "dota2"}, truncate: true });
     }
 
     await BuffPage.bulkCreate(buffItemLs);
@@ -119,7 +118,7 @@ export let crawlBuff = async (category) => {
     var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM buff_page bp  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT })
     var buffIdDelete: any[] = [];
     for(let i=0;i<duplicate.length;i++){
-        var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = '${(duplicate[i] as any).name}' and bp.category = '${category}' order by original_price asc`, { type: QueryTypes.SELECT })
+        var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = '${(duplicate[i] as any).name.replace("'", '\'\'')}' and bp.category = '${category}' order by original_price asc`, { type: QueryTypes.SELECT })
 
         for(let i=1;i<findNameAsc.length;i++){
             buffIdDelete.push((findNameAsc[i] as any).id);
