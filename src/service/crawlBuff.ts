@@ -128,6 +128,6 @@ export let crawlBuff = async (category) => {
     await BuffPage.destroy({where: {id : buffIdDelete}});
     
 
-    console.log(`Insert DB Buff done`);
+    console.log(`Insert DB Buff ${category} done`);
 
 };
