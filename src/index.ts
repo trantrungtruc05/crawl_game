@@ -18,10 +18,10 @@ app.route("/crawl_buff_dota").get(controller.crawlBuffDota);
 app.route("/crawl_buff_all").get(controller.crawlBuffAll);
 
 // start cron job
-// cron.schedule('* * */24 * * *', async () => {
-//   await crawlBuffService.crawlBuff('csgo');
-//   await crawlBuffService.crawlBuff('dota');
-// });
+cron.schedule('* * */24 * * *', async () => {
+  await crawlBuffService.crawlBuff('csgo');
+  await crawlBuffService.crawlBuff('dota');
+});
 
 app.listen(port, async () => {
   await connection.sync();
