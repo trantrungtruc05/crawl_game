@@ -9,10 +9,8 @@ var cron = require('node-cron');
 const { QueryTypes } = require('sequelize');
 import nodemailer from 'nodemailer';
 
-
-var buffItemLs: any[] = [];
-
 export let crawlBuff = async (category) => {
+    var buffItemLs: any[] = [];
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     console.log(` CRAWL BUFF ${category}`);
