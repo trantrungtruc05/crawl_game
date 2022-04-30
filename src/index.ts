@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import * as controller from './controller';
 import connection from './db/connection';
-import * as https from 'https';
+import cors from "cors";
 import * as crawlBuffService from './service/crawlBuff';
 import * as crawlEtopPageService from './service/crawlEtop';
 
@@ -14,6 +14,21 @@ const port = 3002;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const allowedOrigins = new Array();
+allowedOrigins.push('http://localhost:8080');
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin) { return callback(null, true); }
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = "The CORS policy for this site does not " +
+        "allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
+
+
 
 app.route("/crawl_buff_csgo").get(controller.crawlBuffCsgo);
 app.route("/crawl_buff_dota").get(controller.crawlBuffDota);
@@ -21,6 +36,9 @@ app.route("/crawl_buff_all").get(controller.crawlBuffAll);
 app.route("/crawl_etop_page_csgo").get(controller.crawlEtopCsgo);
 app.route("/crawl_etop_page_dota").get(controller.crawlEtopDota);
 app.route("/crawl_etop_page_all").get(controller.crawlEtopAll);
+
+
+app.route("/test").get(controller.test);
 
 
 // start cron job

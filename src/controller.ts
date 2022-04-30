@@ -40,3 +40,9 @@ export let crawlEtopAll = async (req, res) => {
     return res.status(200).send('crawl_etop_page_all');
 };
 
+
+export let test = async (req, res) => {
+    console.log('test jquery call api');
+    return res.status(200).send('test_yeh');
+};
+

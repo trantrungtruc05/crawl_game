@@ -99,6 +99,8 @@ export let crawlBuff = async (category) => {
             var priceVnd = parseFloat(buyMaxPrice) * parseFloat(yuanCurrency[0].value);
             var priceSaleVnd = parseFloat(sellMinPrice) * parseFloat(yuanCurrency[0].value);
 
+            console.log(name);
+
             var item = { name: name, originalPrice: parseFloat(buyMaxPrice), priceByVnd: Math.round(priceVnd - 0.03 * priceVnd), originalPriceByVnd: Math.round(priceVnd), category: `${category}`, originBuffSellPrice: parseFloat(sellMinPrice), buffSellPriceVnd: Math.round(priceSaleVnd), createAt: new Date() };
             buffItemLs.push(item);
         }
