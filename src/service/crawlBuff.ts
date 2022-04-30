@@ -123,7 +123,8 @@ export let crawlBuff = async (category) => {
     var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM buff_page bp  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT })
     var buffIdDelete: any[] = [];
     for(let i=0;i<duplicate.length;i++){
-        var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = '${(duplicate[i] as any).name}' and bp.category = '${category}' order by original_price asc`, { replacements: [text], type: QueryTypes.SELECT })
+        var name = (duplicate[i] as any).name;
+        var findNameAsc = await connection.query(`select * from buff_page bp  where bp.name = :name and bp.category = '${category}' order by original_price asc`,  { replacements: {name}, type: QueryTypes.SELECT })
 
         for(let i=1;i<findNameAsc.length;i++){
             buffIdDelete.push((findNameAsc[i] as any).id);
