@@ -7,6 +7,7 @@ import { text } from 'body-parser';
 import * as handleStatus from './handleStatus';
 var cron = require('node-cron');
 const { QueryTypes } = require('sequelize');
+import nodemailer from 'nodemailer';
 
 
 var buffItemLs: any[] = [];
@@ -98,9 +99,6 @@ export let crawlBuff = async (category) => {
 
             var priceVnd = parseFloat(buyMaxPrice) * parseFloat(yuanCurrency[0].value);
             var priceSaleVnd = parseFloat(sellMinPrice) * parseFloat(yuanCurrency[0].value);
-
-            console.log(name);
-
             var item = { name: name, originalPrice: parseFloat(buyMaxPrice), priceByVnd: Math.round(priceVnd - 0.03 * priceVnd), originalPriceByVnd: Math.round(priceVnd), category: `${category}`, originBuffSellPrice: parseFloat(sellMinPrice), buffSellPriceVnd: Math.round(priceSaleVnd), createAt: new Date() };
             buffItemLs.push(item);
         }
@@ -139,5 +137,23 @@ export let crawlBuff = async (category) => {
 
     // update status idle when crawl buff finish
     await handleStatus.crawl(479682, 'idle');
+
+    // send mail
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'crawlgame91@gmail.com',
+            pass: 'trungtruc'
+        }
+    });
+
+    var mailOptions = {
+        from: 'crawlgame91@gmail.com',
+        to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
+        subject: `Crawl thành công Buff ${category}`,
+        text: `Crawl thành công Buff ${category} vào lúc ${new Date()}`
+    };
+
+    transporter.sendMail(mailOptions);
 
 };
