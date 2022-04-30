@@ -2,7 +2,7 @@ import { Table, Model, Column, DataType } from "sequelize-typescript";
 
 @Table({
     timestamps: false,
-    tableName: "etopfun_page_bk",
+    tableName: "etopfun_page",
 })
 export class EtopPage extends Model {
 
