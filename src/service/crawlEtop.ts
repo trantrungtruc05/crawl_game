@@ -70,12 +70,21 @@ export let crawlEtop = async (category) => {
             if (category === 'csgo') {
                 await EtopPage.destroy({ where: {category: 'csgo'}});
                 await EtopPage.bulkCreate(etopItemLs);
-                console.log(`Insert DB ${category} done`);
             } else {
                 await EtopPage.destroy({ where: {category: 'dota2'}});
                 await EtopPage.bulkCreate(etopItemLs);
-                console.log(`Insert DB ${category} done`);
             }
+
+            const { Op } = require("sequelize");
+            await EtopPage.destroy({
+                where: {
+                    originalPrice: {
+                        [Op.lt]: 30
+                    }
+                }
+            });
+
+            console.log(`Insert DB ${category} done`);
 
 
         }
