@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize-typescript";
 import { ConfigInfo } from "../entity/ConfigInfo";
 import { EmpirePage } from "../entity/EmpirePage";
 import { BuffPage } from "../entity/BuffPage";
+import { EtopPage } from "../entity/EtopPage";
 
 
 const connection = new Sequelize({
@@ -11,7 +12,7 @@ const connection = new Sequelize({
   password: "652606",
   database: "crawl",
   logging: false,
-  models: [ConfigInfo, EmpirePage, BuffPage],
+  models: [ConfigInfo, EmpirePage, BuffPage, EtopPage],
 });
 
 export default connection;

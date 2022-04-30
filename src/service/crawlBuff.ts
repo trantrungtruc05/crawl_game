@@ -105,10 +105,10 @@ export let crawlBuff = async (category) => {
 
     if(category === 'csgo'){
         console.log(`Clear table buff with category ${category}`);
-        await BuffPage.destroy({ where: {category: "csgo"}, truncate: true });
+        await BuffPage.destroy({ where: {category: "csgo"}});
     }else{
         console.log(`Clear table buff with category ${category}`);
-        await BuffPage.destroy({ where: {category: "dota2"}, truncate: true });
+        await BuffPage.destroy({ where: {category: "dota2"}});
     }
 
     await BuffPage.bulkCreate(buffItemLs);

@@ -16,7 +16,7 @@ export let crawlEmpire = async () => {
     var data;
 
     do {
-        console.log(`crawling page ${page}`);
+        console.log(`crawling empire page ${page}`);
 
         var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1000&price_max_above=999999&sort=desc&order=market_value`;
         var result = await axios.get(link, {
@@ -31,6 +31,9 @@ export let crawlEmpire = async () => {
             var marketname = data[i].market_name;
             var marketValue = data[i].market_value;
             var itemId = data[i].id;
+            var truc = data[i].truc;
+
+            console.log(">>> : " + truc);
 
             var realMarketValue;
             if (!data[i].custom_price_percentage) {
