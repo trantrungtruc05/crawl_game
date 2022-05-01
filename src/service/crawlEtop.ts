@@ -67,7 +67,7 @@ export let crawlEtop = async (category) => {
         await EtopPage.destroy({
             where: {
                 originalPrice: {
-                    [Op.lt]: 30
+                    [Op.lt]: 20
                 }
             }
         });
