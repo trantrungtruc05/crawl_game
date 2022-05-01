@@ -1,13 +1,10 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
 import { ConfigInfo } from '../entity/ConfigInfo';
 import { EtopPage } from '../entity/EtopPage';
 import * as handleStatus from './handleStatus';
-import nodemailer from 'nodemailer';
+import * as callApi from './callApi';
+import * as mailService from './mailService';
 
-
-
-var buffItemLs: any[] = [];
 
 export let crawlEtop = async (category) => {
     console.log(`CRAWL ${category}`);
@@ -25,17 +22,10 @@ export let crawlEtop = async (category) => {
 
     var totalPageLink = category == 'csgo' ? 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=1&quality=&rarity=&exterior=&lang=en' : 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=1&quality=&rarity=&exterior=&lang=en';
 
-    var result = await axios.get(totalPageLink, {
-        proxy: {
-            host: `${proxy.split(':')[0]}`,
-            port: parseInt(proxy.split(':')[1]),
-            auth: { username: 'dmogyuzp', password: 'lx8fr8go05bq' }
-        },
-        headers: {
-            'content-type': 'application/json',
-            'Cookie': cookieEtopCrawl[0].value
-        }
-    });
+    var result = await callApi.apiWithProxy(category, proxy, totalPageLink, cookieEtopCrawl);
+    if(result.status === 'fail'){
+        return;
+    }
 
     var totalPage = result.data.datas.pager.pages;
     console.log(`Crawl etop page with size: ${totalPage}`);
@@ -47,17 +37,11 @@ export let crawlEtop = async (category) => {
         var etopItemLs: any[] = [];
         while (page <= totalPage) {
             var getItemLink = category == "csgo" ? `https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=${page}&hero=&quality=&rarity=&lang=en` : `https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=${page}&hero=&quality=&rarity=&lang=en`;
-            var resultGetItem = await axios.get(getItemLink, {
-                proxy: {
-                    host: `${proxy.split(':')[0]}`,
-                    port: parseInt(proxy.split(':')[1]),
-                    auth: { username: 'dmogyuzp', password: 'lx8fr8go05bq' }
-                },
-                headers: {
-                    'content-type': 'application/json',
-                    'Cookie': cookieEtopCrawl[0].value
-                }
-            })
+            
+            var resultGetItem = await callApi.apiWithProxy(category, proxy, getItemLink, cookieEtopCrawl);
+            if(resultGetItem.status === 'fail'){
+                return;
+            }
 
             console.log(">>>>>>> crawling etop item with page: " + page);
 
@@ -93,22 +77,7 @@ export let crawlEtop = async (category) => {
         await handleStatus.crawl(503899, 'idle');
 
         // send mail
-        var transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'crawlgame91@gmail.com',
-                pass: 'trungtruc'
-            }
-        });
-
-        var mailOptions = {
-            from: 'crawlgame91@gmail.com',
-            to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
-            subject: `Crawl thành công Etop ${category}`,
-            text: `Crawl thành công Etop ${category} vào lúc ${new Date()}`
-        };
-
-        transporter.sendMail(mailOptions);
+        mailService.send(`Crawl thành công Etop ${category}`, `Crawl thành công Etop ${category} vào lúc ${new Date()}`);
 
 
     }

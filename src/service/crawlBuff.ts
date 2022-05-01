@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
 import { ConfigInfo } from '../entity/ConfigInfo';
 import { BuffPage } from '../entity/BuffPage';
 import connection from '../db/connection';
-import { text } from 'body-parser';
 import * as handleStatus from './handleStatus';
+import * as callApi from './callApi';
+import * as mailService from './mailService';
 var cron = require('node-cron');
 const { QueryTypes } = require('sequelize');
-import nodemailer from 'nodemailer';
+
 
 export let crawlBuff = async (category) => {
     var buffItemLs: any[] = [];
@@ -29,16 +29,10 @@ export let crawlBuff = async (category) => {
 
     var proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
 
-    var totalPageResult = await axios.get(totalPageLink, {
-        proxy: {
-            host: `${proxy.split(':')[0]}`,
-            port: parseInt(proxy.split(':')[1]),
-            auth: { username: 'dmogyuzp', password: 'lx8fr8go05bq' }
-        },
-        headers: {
-            'Cookie': cookieBuff[0].value
-        }
-    });
+    var totalPageResult = await callApi.apiWithProxy(category, proxy, totalPageLink, cookieBuff);
+    if(totalPageResult.status === 'fail'){
+        return;
+    }
 
     // sleep
     await snooze(4000);
@@ -48,16 +42,10 @@ export let crawlBuff = async (category) => {
 
     proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
 
-    var totalPageRealResult = await axios.get(totalPageRealLink, {
-        proxy: {
-            host: `${proxy.split(':')[0]}`,
-            port: parseInt(proxy.split(':')[1]),
-            auth: { username: 'dmogyuzp', password: 'lx8fr8go05bq' }
-        },
-        headers: {
-            'Cookie': cookieBuff[0].value
-        }
-    });
+    var totalPageRealResult = await callApi.apiWithProxy(category, proxy, totalPageRealLink, cookieBuff);
+    if(totalPageRealResult.status === 'fail'){
+        return;
+    }
 
 
     // sleep
@@ -76,17 +64,10 @@ export let crawlBuff = async (category) => {
         var getItemLink = category == 'csgo' ? `https://buff.163.com/api/market/goods?game=csgo&page_num=${page}&page_size=80&min_price=130&use_suggestion=0&trigger=undefined_trigger&_=${currentTime}` : `https://buff.163.com/api/market/goods?game=dota2&page_num=${page}&page_size=80&min_price=10&use_suggestion=0&trigger=undefined_trigger&_=${currentTime}`;
 
         proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
-
-        var getItemLinkResult = await axios.get(getItemLink, {
-            proxy: {
-                host: `${proxy.split(':')[0]}`,
-                port: parseInt(proxy.split(':')[1]),
-                auth: { username: 'dmogyuzp', password: 'lx8fr8go05bq' }
-            },
-            headers: {
-                'Cookie': cookieBuff[0].value
-            }
-        });
+        var getItemLinkResult = await callApi.apiWithProxy(category, proxy, getItemLink, cookieBuff);
+        if(getItemLinkResult.status === 'fail'){
+            return;
+        }
 
         console.log(`>>>>>>> crawling Buff with URL ${getItemLink}`);
 
@@ -138,21 +119,7 @@ export let crawlBuff = async (category) => {
     await handleStatus.crawl(479682, 'idle');
 
     // send mail
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'crawlgame91@gmail.com',
-            pass: 'trungtruc'
-        }
-    });
-
-    var mailOptions = {
-        from: 'crawlgame91@gmail.com',
-        to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
-        subject: `Crawl thành công Buff ${category}`,
-        text: `Crawl thành công Buff ${category} vào lúc ${new Date()}`
-    };
-
-    transporter.sendMail(mailOptions);
+    mailService.send(`Crawl thành công Buff ${category}`, `Crawl thành công Buff ${category} vào lúc ${new Date()}`);
+    
 
 };
