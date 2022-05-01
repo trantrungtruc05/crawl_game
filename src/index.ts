@@ -31,7 +31,7 @@ app.route("/test").get(controller.test);
 // start cron job
 cron.schedule('0 0 0 * * *', async () => {
   await crawlBuffService.crawlBuff('csgo');
-  await crawlBuffService.crawlBuff('dota');
+  await crawlBuffService.crawlBuff('dota2');
 });
 
 cron.schedule('0 0 23 * * *', async () => {

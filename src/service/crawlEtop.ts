@@ -43,7 +43,7 @@ export let crawlEtop = async (category) => {
                 return;
             }
 
-            console.log(">>>>>>> crawling etop item with page: " + page);
+            console.log(`>>>>>>> crawling etop item with page: ${page} with link ${getItemLink}`);
 
             for (let i = 0; i < resultGetItem.data.datas.list.length; i++) {
                 var priceByVnd = resultGetItem.data.datas.list[i].value * parseInt(etopCurrency[0].value);
