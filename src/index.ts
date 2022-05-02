@@ -27,18 +27,6 @@ app.route("/crawl_etop_page_all").get(controller.crawlEtopAll);
 
 app.route("/test").get(controller.test);
 
-
-// start cron job
-cron.schedule('0 0 0 * * *', async () => {
-  await crawlBuffService.crawlBuff('csgo');
-  await crawlBuffService.crawlBuff('dota2');
-});
-
-cron.schedule('0 0 23 * * *', async () => {
-  await crawlEtopPageService.crawlEtop('csgo');
-  await crawlEtopPageService.crawlEtop('dota2');
-});
-
 app.listen(port, async () => {
   await connection.sync();
   console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
