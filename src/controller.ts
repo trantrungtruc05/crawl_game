@@ -24,19 +24,39 @@ export let crawlBuffAll = async (req, res) => {
     return res.status(200).send('crawl_buff_dota2');
 };
 
+
+// crawl etop item store
 export let crawlEtopCsgo = async (req, res) => {
-    crawlEtopPageService.crawlEtop('csgo');
+    crawlEtopPageService.crawlEtop('csgo', 'page');
     return res.status(200).send('crawl_etop_page_csgo');
 };
 
 export let crawlEtopDota = async (req, res) => {
-    crawlEtopPageService.crawlEtop('dota2');
+    crawlEtopPageService.crawlEtop('dota2', 'page');
     return res.status(200).send('crawl_etop_page_dota');
 };
 
 export let crawlEtopAll = async (req, res) => {
-    await crawlEtopPageService.crawlEtop('csgo');
-    await crawlEtopPageService.crawlEtop('dota2');
+    await crawlEtopPageService.crawlEtop('csgo', 'page');
+    await crawlEtopPageService.crawlEtop('dota2', 'page');
+    return res.status(200).send('crawl_etop_page_all');
+};
+
+
+// crawl etop order
+export let crawlEtopCsgoOrder = async (req, res) => {
+    crawlEtopPageService.crawlEtop('csgo', 'order');
+    return res.status(200).send('crawl_etop_page_csgo');
+};
+
+export let crawlEtopDotaOrder = async (req, res) => {
+    crawlEtopPageService.crawlEtop('dota2', 'order');
+    return res.status(200).send('crawl_etop_page_dota');
+};
+
+export let crawlEtopOrderAll = async (req, res) => {
+    await crawlEtopPageService.crawlEtop('csgo', 'order');
+    await crawlEtopPageService.crawlEtop('dota2', 'order');
     return res.status(200).send('crawl_etop_page_all');
 };
 

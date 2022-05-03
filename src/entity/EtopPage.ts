@@ -26,4 +26,7 @@ export class EtopPage extends Model {
 
     @Column({ type: DataType.BIGINT, allowNull: true, field: 'id_item'})
     idItem: number;
+
+    @Column({ type: DataType.STRING, allowNull: true})
+    type: string;
 }

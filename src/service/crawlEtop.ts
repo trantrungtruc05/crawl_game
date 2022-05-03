@@ -4,10 +4,13 @@ import { EtopPage } from '../entity/EtopPage';
 import * as handleStatus from './handleStatus';
 import * as callApi from './callApi';
 import * as mailService from './mailService';
+import { parse } from 'path';
 
 
-export let crawlEtop = async (category) => {
-    console.log(`CRAWL ${category}`);
+export let crawlEtop = async (category, type) => {
+
+    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+    console.log(`CRAWL ETOP ${type} with ${category}`);
 
     await handleStatus.crawl(503899, 'running');
 
@@ -20,7 +23,7 @@ export let crawlEtop = async (category) => {
     const cookieEtopCrawl: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "etop_crawl", type: "cookie" } });
     const etopCurrency: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "etop", type: "currency" } });
 
-    var totalPageLink = category == 'csgo' ? 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=1&quality=&rarity=&exterior=&lang=en' : 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=1&quality=&rarity=&exterior=&lang=en';
+    var totalPageLink = linkByType(category, type, 1);
 
     var result = await callApi.apiWithProxy(category, proxy, totalPageLink, cookieEtopCrawl);
     if(result.status === 'fail'){
@@ -36,7 +39,7 @@ export let crawlEtop = async (category) => {
         var page = 1;
         var etopItemLs: any[] = [];
         while (page <= totalPage) {
-            var getItemLink = category == "csgo" ? `https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=${page}&hero=&quality=&rarity=&lang=en` : `https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=${page}&hero=&quality=&rarity=&lang=en`;
+            var getItemLink = linkByType(category, type, page);
             
             var resultGetItem = await callApi.apiWithProxy(category, proxy, getItemLink, cookieEtopCrawl);
             if(resultGetItem.status === 'fail'){
@@ -47,21 +50,18 @@ export let crawlEtop = async (category) => {
 
             for (let i = 0; i < resultGetItem.data.datas.list.length; i++) {
                 var priceByVnd = resultGetItem.data.datas.list[i].value * parseInt(etopCurrency[0].value);
-                var item = { createAt: new Date(), name: resultGetItem.data.datas.list[i].pop.topName.tag, originalPrice: resultGetItem.data.datas.list[i].value, priceByVnd: Math.round(priceByVnd), category: category };
+                var item = { createAt: new Date(), name: resultGetItem.data.datas.list[i].pop.topName.tag, originalPrice: resultGetItem.data.datas.list[i].value, priceByVnd: Math.round(priceByVnd), category: category, type: type };
                 etopItemLs.push(item);
 
             }
 
             page++;
+            // sleep
+            await snooze(3000);
         }
 
-        if (category === 'csgo') {
-            await EtopPage.destroy({ where: { category: 'csgo' } });
-            await EtopPage.bulkCreate(etopItemLs);
-        } else {
-            await EtopPage.destroy({ where: { category: 'dota2' } });
-            await EtopPage.bulkCreate(etopItemLs);
-        }
+        await EtopPage.destroy({ where: { category: category, type: type } });
+        await EtopPage.bulkCreate(etopItemLs);
 
         const { Op } = require("sequelize");
         await EtopPage.destroy({
@@ -81,4 +81,17 @@ export let crawlEtop = async (category) => {
 
 
     }
+};
+
+
+
+export let linkByType = (category, type, page) => {
+    var link;
+    if(type === 'page'){
+        link = category === 'csgo' ? 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=' + page + '&hero=&quality=&rarity=&lang=en' : 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=' + page + '&quality=&rarity=&exterior=&lang=en';
+    }else{
+        link = category === 'csgo' ? 'https://www.etopfun.com/api/ingotitems/realitemback/orderlist.do?appid=730&page=' + page + '&rows=60&mark_name=&lang=en' : 'https://www.etopfun.com/api/ingotitems/realitemback/orderlist.do?appid=570&page=' + page + '&rows=60&mark_name=&lang=en';
+    }
+
+    return link;
 };
