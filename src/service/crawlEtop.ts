@@ -72,7 +72,7 @@ export let crawlEtop = async (category, type) => {
             }
         });
 
-        console.log(`Insert DB ${category} done`);
+        console.log(`Insert DB Etop ${type} with ${category} done`);
 
         await handleStatus.crawl(503899, 'idle');
 
