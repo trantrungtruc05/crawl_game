@@ -31,7 +31,7 @@ export let crawlEtop = async (category, type) => {
     }
 
     var totalPage = result.data.datas.pager.pages;
-    console.log(`Crawl etop page with size: ${totalPage}`);
+    console.log(`Crawl etop ${type} page ${category} with size: ${totalPage}`);
 
     if (result.data === '') {
         console.log('failed');
@@ -46,7 +46,7 @@ export let crawlEtop = async (category, type) => {
                 return;
             }
 
-            console.log(`>>>>>>> crawling etop item with page: ${page} with link ${getItemLink}`);
+            console.log(`>>>>>>> crawling etop ${type} item ${category} with page: ${page} with link ${getItemLink}`);
 
             for (let i = 0; i < resultGetItem.data.datas.list.length; i++) {
                 var priceByVnd = resultGetItem.data.datas.list[i].value * parseInt(etopCurrency[0].value);
@@ -77,7 +77,7 @@ export let crawlEtop = async (category, type) => {
         await handleStatus.crawl(503899, 'idle');
 
         // send mail
-        mailService.send(`Crawl thành công Etop ${category}`, `Crawl thành công Etop ${category} vào lúc ${new Date()}`);
+        mailService.send(`Crawl thành công Etop ${type} with ${category}`, `Crawl thành công Etop ${type} with ${category} vào lúc ${new Date()}`);
 
 
     }
