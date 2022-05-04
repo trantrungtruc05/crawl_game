@@ -9,6 +9,8 @@ import { parse } from 'path';
 
 export let crawlEtop = async (category, type) => {
 
+    var retry = 0;
+
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     console.log(`CRAWL ETOP ${type} with ${category}`);
 
@@ -26,8 +28,14 @@ export let crawlEtop = async (category, type) => {
     var totalPageLink = linkByType(category, type, 1);
 
     var result = await callApi.apiWithProxy(category, proxy, totalPageLink, cookieEtopCrawl);
-    if(result.status === 'fail'){
-        return;
+    if (result.status === 'fail') {
+        retry++;
+        if (retry <= 4) {
+            crawlEtop(category, type);
+        } else {
+            // send mail
+            mailService.send(`Crawl THẤT BẠI ${category}`, `Crawl THẤT BẠI ${category} lần thứ ${retry} vào lúc ${new Date()} - link ${totalPageLink} - lỗi ${result.data} `);
+        }
     }
 
     var totalPage = result.data.datas.pager.pages;
@@ -40,10 +48,16 @@ export let crawlEtop = async (category, type) => {
         var etopItemLs: any[] = [];
         while (page <= totalPage) {
             var getItemLink = linkByType(category, type, page);
-            
+
             var resultGetItem = await callApi.apiWithProxy(category, proxy, getItemLink, cookieEtopCrawl);
-            if(resultGetItem.status === 'fail'){
-                return;
+            if (resultGetItem.status === 'fail') {
+                retry++;
+                if (retry <= 4) {
+                    crawlEtop(category, type);
+                } else {
+                    // send mail
+                    mailService.send(`Crawl THẤT BẠI ${category}`, `Crawl THẤT BẠI ${category} lần thứ ${retry} vào lúc ${new Date()} - link ${getItemLink} - lỗi ${result.data} `);
+                }
             }
 
             console.log(`>>>>>>> crawling etop ${type} item ${category} with page: ${page} with link ${getItemLink}`);
@@ -87,9 +101,9 @@ export let crawlEtop = async (category, type) => {
 
 export let linkByType = (category, type, page) => {
     var link;
-    if(type === 'page'){
+    if (type === 'page') {
         link = category === 'csgo' ? 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=730&rows=60&page=' + page + '&hero=&quality=&rarity=&lang=en' : 'https://www.etopfun.com/api/schema/bcitemlist.do?appid=570&rows=60&page=' + page + '&quality=&rarity=&exterior=&lang=en';
-    }else{
+    } else {
         link = category === 'csgo' ? 'https://www.etopfun.com/api/ingotitems/realitemback/orderlist.do?appid=730&page=' + page + '&rows=60&mark_name=&lang=en' : 'https://www.etopfun.com/api/ingotitems/realitemback/orderlist.do?appid=570&page=' + page + '&rows=60&mark_name=&lang=en';
     }
 

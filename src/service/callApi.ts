@@ -17,8 +17,6 @@ export let apiWithProxy = async (category, proxy, link, cookie) => {
 
         return result;
     } catch (e) {
-        // send mail
-        mailService.send(`Crawl THẤT BẠI ${category}`, `Crawl THẤT BẠI ${category} vào lúc ${new Date()} với link ${link} và lỗi ${e}`);
         console.log(`Error when call api crawl with ${category}`);
         return { data: `error: ${e}`, status: "fail" };
     }
