@@ -35,6 +35,7 @@ export let crawlEtop = async (category, type) => {
         } else {
             // send mail
             mailService.send(`Crawl THẤT BẠI ${category}`, `Crawl THẤT BẠI ${category} lần thứ ${retry} vào lúc ${new Date()} - link ${totalPageLink} - lỗi ${result.data} `);
+            return;
         }
     }
 
@@ -57,6 +58,7 @@ export let crawlEtop = async (category, type) => {
                 } else {
                     // send mail
                     mailService.send(`Crawl THẤT BẠI ${category}`, `Crawl THẤT BẠI ${category} lần thứ ${retry} vào lúc ${new Date()} - link ${getItemLink} - lỗi ${result.data} `);
+                    return;
                 }
             }
 
