@@ -7,7 +7,7 @@ export let send = async (subject, content) => {
             service: 'gmail',
             auth: {
                 user: 'crawlgame91@gmail.com',
-                pass: 'trungtruc'
+                pass: 'Trungtruc'
             }
         });
     
