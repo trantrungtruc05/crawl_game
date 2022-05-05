@@ -119,7 +119,7 @@ export let crawlBuff = async (category) => {
     await handleStatus.crawl(479682, 'idle');
 
     // send mail
-    mailService.send(`Crawl thành công Buff ${category}`, `Crawl thành công Buff ${category} vào lúc ${new Date()}`);
+    // mailService.send(`Crawl thành công Buff ${category}`, `Crawl thành công Buff ${category} vào lúc ${new Date()}`);
     
 
 };
