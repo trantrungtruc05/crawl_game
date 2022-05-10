@@ -93,7 +93,7 @@ export let crawlEtop = async (category, type) => {
         await handleStatus.crawl(503899, 'idle');
 
         // send mail
-        // mailService.send(`Crawl thành công Etop ${type} with ${category}`, `Crawl thành công Etop ${type} with ${category} vào lúc ${new Date()}`);
+        mailService.send(`Crawl thành công Etop ${type} with ${category}`, `Crawl thành công Etop ${type} with ${category} vào lúc ${new Date()}`);
 
 
     }
