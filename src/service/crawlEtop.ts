@@ -66,7 +66,7 @@ export let crawlEtop = async (category, type) => {
 
             for (let i = 0; i < resultGetItem.data.datas.list.length; i++) {
                 var priceByVnd = resultGetItem.data.datas.list[i].value * parseInt(etopCurrency[0].value);
-                var item = { createAt: new Date(), name: resultGetItem.data.datas.list[i].pop.topName.tag, originalPrice: resultGetItem.data.datas.list[i].value, priceByVnd: Math.round(priceByVnd), category: category, type: type };
+                var item = { createAt: new Date(), name: resultGetItem.data.datas.list[i].pop.topName.tag, originalPrice: resultGetItem.data.datas.list[i].value, priceByVnd: Math.round(priceByVnd), category: category, slot: resultGetItem.data.datas.list[i].leftSlot, type: type };
                 etopItemLs.push(item);
 
             }

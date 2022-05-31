@@ -29,4 +29,7 @@ export class EtopPage extends Model {
 
     @Column({ type: DataType.STRING, allowNull: true})
     type: string;
+
+    @Column({ type: DataType.STRING, allowNull: true})
+    slot: string;
 }
