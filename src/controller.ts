@@ -63,6 +63,17 @@ export let crawlEtopOrderAll = async (req, res) => {
 
 export let test = async (req, res) => {
     console.log('test jquery call api');
+
+    var s = {truc: 'yeh', zzz: 'ahaha'};
+
+    if(!(s as any).truc){
+        console.log('khong co');
+    }else{
+        console.log('co');
+    }
+
+    console.log( (s as any).trucd );
+
     return res.status(200).send('test_yeh');
 };
 

@@ -2,7 +2,9 @@ import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import * as controller from './controller';
 import connection from './db/connection';
+import * as crawlEmpire from './service/crawlEmpire';
 import cors from "cors";
+var cron = require('node-cron');
 
 const app: Express = express();
 
@@ -27,8 +29,14 @@ app.route("/crawl_etop_order_csgo").get(controller.crawlEtopCsgoOrder);
 app.route("/crawl_etop_order_dota").get(controller.crawlEtopDotaOrder);
 app.route("/crawl_etop_order_all").get(controller.crawlEtopOrderAll);
 
+// crawl empire
+app.route("/crawl_empire").get(controller.crawlEmpire);
 
 app.route("/test").get(controller.test);
+
+cron.schedule('*/5 * * * *', async () => {
+  crawlEmpire.crawlEmpire();
+});
 
 app.listen(port, async () => {
   await connection.sync();

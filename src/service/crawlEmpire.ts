@@ -2,27 +2,34 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import { ConfigInfo } from '../entity/ConfigInfo';
 import { EmpirePage } from '../entity/EmpirePage';
-var cron = require('node-cron');
+import connection from '../db/connection';
+const { QueryTypes } = require('sequelize');
 
 export let crawlEmpire = async () => {
 
     console.log(' CRAWL EMPIRE ');
+    const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
-    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire_crawl", type: "cookie" } });
+    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
     var page = 1;
     var data;
 
-    do {
-        console.log(`crawling empire page ${page}`);
+    var proxyLisy = ['45.131.212.199:6248', '45.131.212.96:6145', '45.131.212.239:6288', '45.131.212.154:6203', '45.131.212.54:6103', '45.131.212.147:6196', '45.131.212.134:6183', '45.131.212.230:6279', '45.131.212.8:6057', '45.131.212.223:6272'
+        , '45.131.212.243:6292', '45.131.212.110:6159', '45.131.212.139:6188', '45.131.212.116:6165', '45.131.212.164:6213', '45.131.212.196:6245', '45.131.212.250:6299', '45.131.212.228:6277', '45.131.212.240:6289', '45.131.212.211:6260']
 
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1000&price_max_above=999999&sort=desc&order=market_value`;
+    do {
+        var proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
+        var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
+        console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=20&price_max_above=21&sort=desc&order=market_value`;
         var result = await axios.get(link, {
+        
             headers: {
                 'content-type': 'application/json',
-                'Cookie': cookie[0].value
+                'Cookie': cookieRandom.value
             }
         });
 
@@ -31,10 +38,7 @@ export let crawlEmpire = async () => {
             var marketname = data[i].market_name;
             var marketValue = data[i].market_value;
             var itemId = data[i].id;
-            var truc = data[i].truc;
-
-            console.log(">>> : " + truc);
-
+            
             var realMarketValue;
             if (!data[i].custom_price_percentage) {
                 realMarketValue = marketValue / 100;
@@ -52,13 +56,42 @@ export let crawlEmpire = async () => {
         }
 
         page++;
+        // sleep
+    await snooze(3000);
 
     // } while (data.length > 0)
-        } while (page < 5)
+        } while (page < 60)
 
-    await EmpirePage.destroy({ where: {}, truncate: true });
+    // delete all
+    await EmpirePage.destroy({ where: {}});
+
+    // insert data
     await EmpirePage.bulkCreate(empireItemLs);
+
+    // process data after insert
+    var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
+    var empireIdDelete: any[] = [];
+    for(let i=0;i<duplicate.length;i++){
+        var name = (duplicate[i] as any).name;
+        var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
+
+        for(let i=1;i<findNameAsc.length;i++){
+            empireIdDelete.push((findNameAsc[i] as any).id);
+        }
+    }
+
+    await EmpirePage.destroy({where: {id : empireIdDelete}});
+
+    var specialChar = await connection.query(`select * from empire_page  where name like '%Sticker%'`);
+    var empireSpecialCharDel: any[] = [];
+    for(let i=0;i<specialChar.length;i++){
+        empireSpecialCharDel.push((specialChar[i] as any).id);
+    }
+    await EmpirePage.destroy({where: {id : empireSpecialCharDel}});
+
     console.log(`Insert DB Empire done`);
+
+
 
 
 
