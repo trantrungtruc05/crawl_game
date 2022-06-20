@@ -11,20 +11,16 @@ export let crawlEmpire = async () => {
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
-    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { type: "empire_crawl" } });
+    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire_crawl", type: "cookie" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
     var page = 1;
     var data;
 
-    var proxyLisy = ['45.131.212.199:6248', '45.131.212.96:6145', '45.131.212.239:6288', '45.131.212.154:6203', '45.131.212.54:6103', '45.131.212.147:6196', '45.131.212.134:6183', '45.131.212.230:6279', '45.131.212.8:6057', '45.131.212.223:6272'
-        , '45.131.212.243:6292', '45.131.212.110:6159', '45.131.212.139:6188', '45.131.212.116:6165', '45.131.212.164:6213', '45.131.212.196:6245', '45.131.212.250:6299', '45.131.212.228:6277', '45.131.212.240:6289', '45.131.212.211:6260']
-
     do {
-        var proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=20&price_max_above=21&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1&price_max_above=9999999&sort=desc&order=market_value`;
         var result = await axios.get(link, {
         
             headers: {
