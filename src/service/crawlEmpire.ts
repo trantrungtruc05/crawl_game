@@ -11,7 +11,7 @@ export let crawlEmpireRange1 = async () => {
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
-    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire_crawl", type: "cookie" } });
+    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "asimovet1", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
     var page = 1;
@@ -100,7 +100,7 @@ export let crawlEmpireRange2 = async () => {
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
-    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire_crawl", type: "cookie" } });
+    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "beaverK25", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
     var page = 61;
@@ -189,7 +189,7 @@ export let crawlEmpireRange3 = async () => {
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
-    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire_crawl", type: "cookie" } });
+    const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "manuciant11", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
     var page = 121;
