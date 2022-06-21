@@ -4,7 +4,7 @@ import * as crawlBuffService from './service/crawlBuff';
 import * as crawlEtopPageService from './service/crawlEtop';
 
 export let crawlEmpire = async (req, res) => {
-    crawlEmpireService.crawlEmpire();
+    crawlEmpireService.crawlEmpireRange1();
     return res.status(200).send('crawl_empire');
 };
 
