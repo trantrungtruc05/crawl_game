@@ -26,4 +26,7 @@ export class EmpirePage extends Model {
 
     @Column({ type: DataType.DOUBLE, allowNull: true, field: 'original_price_not_percentage'})
     originalPriceNotPercentage: number;
+
+    @Column({ type: DataType.BIGINT, allowNull: true, field: 'range'})
+    range: number;
 }
