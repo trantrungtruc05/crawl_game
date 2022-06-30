@@ -73,7 +73,12 @@ export let crawlEtop = async (category, type) => {
 
             page++;
             // sleep
-            await snooze(3000);
+            if (type === 'page') {
+                await snooze(1000);
+            } else {
+                await snooze(3000);    
+            }
+            
         }
 
         await EtopPage.destroy({ where: { category: category, type: type } });
