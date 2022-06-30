@@ -35,8 +35,8 @@ app.route("/crawl_empire").get(controller.crawlEmpire);
 app.route("/test").get(controller.test);
 
 cron.schedule('*/5 * * * *', async () => {
-  crawlEmpire.crawlEmpireRange1();
-  // crawlEmpire.crawlEmpireRange2();
+  // crawlEmpire.crawlEmpireRange1();
+  crawlEmpire.crawlEmpireRange2();
   // crawlEmpire.crawlEmpireRange3();
 });
 
