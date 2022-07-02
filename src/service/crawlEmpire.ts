@@ -7,7 +7,6 @@ const { QueryTypes } = require('sequelize');
 
 export let crawlEmpireRange1 = async () => {
 
-    console.log(' CRAWL EMPIRE RANGE 1 ');
     const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
     var empireItemLs: any[] = [];
 
@@ -20,7 +19,7 @@ export let crawlEmpireRange1 = async () => {
     do {
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1&price_max_above=9999999&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
         var result = await axios.get(link, {
         
             headers: {
@@ -53,10 +52,10 @@ export let crawlEmpireRange1 = async () => {
 
         page++;
         // sleep
-    await snooze(3000);
+    await snooze(1000);
 
     // } while (data.length > 0)
-        } while (page < 16)
+        } while (page < 4)
 
     // delete with range = 1
     await EmpirePage.destroy({ where: {range : 1}});
@@ -65,18 +64,17 @@ export let crawlEmpireRange1 = async () => {
     await EmpirePage.bulkCreate(empireItemLs);
 
     // process data after insert
-    var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
-    var empireIdDelete: any[] = [];
-    for(let i=0;i<duplicate.length;i++){
-        var name = (duplicate[i] as any).name;
-        var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
+    // var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
+    // var empireIdDelete: any[] = [];
+    // for(let i=0;i<duplicate.length;i++){
+    //     var name = (duplicate[i] as any).name;
+    //     var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
+    //     for(let i=1;i<findNameAsc.length;i++){
+    //         empireIdDelete.push((findNameAsc[i] as any).id);
+    //     }
+    // }
 
-        for(let i=1;i<findNameAsc.length;i++){
-            empireIdDelete.push((findNameAsc[i] as any).id);
-        }
-    }
-
-    await EmpirePage.destroy({where: {id : empireIdDelete}});
+    // await EmpirePage.destroy({where: {id : empireIdDelete}});
 
     var specialChar = await connection.query(`select * from empire_page  where name like '%Sticker%'`);
     var empireSpecialCharDel: any[] = [];
@@ -86,10 +84,6 @@ export let crawlEmpireRange1 = async () => {
     await EmpirePage.destroy({where: {id : empireSpecialCharDel}});
 
     console.log(`Insert DB Empire done`);
-
-
-
-
 
 };
 
@@ -103,13 +97,13 @@ export let crawlEmpireRange2 = async () => {
     const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "beaverK25", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
-    var page = 16;
+    var page = 4;
     var data;
 
     do {
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1&price_max_above=9999999&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
         var result = await axios.get(link, {
         
             headers: {
@@ -142,30 +136,30 @@ export let crawlEmpireRange2 = async () => {
 
         page++;
         // sleep
-    await snooze(3000);
+    await snooze(1000);
 
     // } while (data.length > 0)
-        } while (page < 32)
+        } while (page < 7)
 
-    // delete with range = 1
+    // delete with range = 2
     await EmpirePage.destroy({ where: {range : 2}});
 
     // insert data
     await EmpirePage.bulkCreate(empireItemLs);
 
     // process data after insert
-    var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
-    var empireIdDelete: any[] = [];
-    for(let i=0;i<duplicate.length;i++){
-        var name = (duplicate[i] as any).name;
-        var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
+    // var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
+    // var empireIdDelete: any[] = [];
+    // for(let i=0;i<duplicate.length;i++){
+    //     var name = (duplicate[i] as any).name;
+    //     var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
 
-        for(let i=1;i<findNameAsc.length;i++){
-            empireIdDelete.push((findNameAsc[i] as any).id);
-        }
-    }
+    //     for(let i=1;i<findNameAsc.length;i++){
+    //         empireIdDelete.push((findNameAsc[i] as any).id);
+    //     }
+    // }
 
-    await EmpirePage.destroy({where: {id : empireIdDelete}});
+    // await EmpirePage.destroy({where: {id : empireIdDelete}});
 
     var specialChar = await connection.query(`select * from empire_page  where name like '%Sticker%'`);
     var empireSpecialCharDel: any[] = [];
@@ -192,13 +186,13 @@ export let crawlEmpireRange3 = async () => {
     const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "manuciant11", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
-    var page = 121;
+    var page = 7;
     var data;
 
     do {
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=160&page=${page}&price_min=1&price_max_above=9999999&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
         var result = await axios.get(link, {
         
             headers: {
@@ -231,30 +225,30 @@ export let crawlEmpireRange3 = async () => {
 
         page++;
         // sleep
-    await snooze(3000);
+    await snooze(1000);
 
     // } while (data.length > 0)
-        } while (page < 200)
+        } while (page < 9)
 
-    // delete with range = 1
+    // delete with range = 3
     await EmpirePage.destroy({ where: {range : 3}});
 
     // insert data
     await EmpirePage.bulkCreate(empireItemLs);
 
     // process data after insert
-    var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
-    var empireIdDelete: any[] = [];
-    for(let i=0;i<duplicate.length;i++){
-        var name = (duplicate[i] as any).name;
-        var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
+    // var duplicate = await connection.query('SELECT name, COUNT(*) dupValue FROM empire_page ep  GROUP BY name HAVING COUNT(*) > 1', { type: QueryTypes.SELECT });
+    // var empireIdDelete: any[] = [];
+    // for(let i=0;i<duplicate.length;i++){
+    //     var name = (duplicate[i] as any).name;
+    //     var findNameAsc = await connection.query(`select * from empire_page ep  where ep.name = :name order by original_price_not_percentage asc`,  { replacements: {name}, type: QueryTypes.SELECT })
 
-        for(let i=1;i<findNameAsc.length;i++){
-            empireIdDelete.push((findNameAsc[i] as any).id);
-        }
-    }
+    //     for(let i=1;i<findNameAsc.length;i++){
+    //         empireIdDelete.push((findNameAsc[i] as any).id);
+    //     }
+    // }
 
-    await EmpirePage.destroy({where: {id : empireIdDelete}});
+    // await EmpirePage.destroy({where: {id : empireIdDelete}});
 
     var specialChar = await connection.query(`select * from empire_page  where name like '%Sticker%'`);
     var empireSpecialCharDel: any[] = [];
