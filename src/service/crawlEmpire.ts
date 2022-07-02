@@ -103,7 +103,7 @@ export let crawlEmpireRange2 = async () => {
     const cookie: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "beaverK25", type: "empire_crawl" } });
     const empirePricing: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "empire", type: "currency" } });
 
-    var page = 61;
+    var page = 16;
     var data;
 
     do {
@@ -145,7 +145,7 @@ export let crawlEmpireRange2 = async () => {
     await snooze(3000);
 
     // } while (data.length > 0)
-        } while (page < 121)
+        } while (page < 32)
 
     // delete with range = 1
     await EmpirePage.destroy({ where: {range : 2}});
