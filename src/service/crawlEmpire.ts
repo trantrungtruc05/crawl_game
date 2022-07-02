@@ -228,7 +228,7 @@ export let crawlEmpireRange3 = async () => {
     await snooze(1000);
 
     // } while (data.length > 0)
-        } while (page < 9)
+        } while (page < 10)
 
     // delete with range = 3
     await EmpirePage.destroy({ where: {range : 3}});
