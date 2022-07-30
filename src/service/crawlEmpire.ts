@@ -22,7 +22,7 @@ export let crawlEmpireRange1 = async () => {
         do {
             var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
             console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-            var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_min=10000&price_max=1500000&auction=yes&price_max_above=15&sort=desc&order=market_value`;
+            var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&auction=yes&price_max_above=15&stattrak=any&has_stickers=any&commodity=any&sort=desc&order=market_value`;
             var result = await axios.get(link, {
 
                 headers: {
