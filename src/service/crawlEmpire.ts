@@ -22,7 +22,7 @@ export let crawlEmpireRange1 = async () => {
         do {
             var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
             console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-            var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_min=10000&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
+            var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_min=10000&price_max=1500000&auction=yes&price_max_above=15&sort=desc&order=market_value`;
             var result = await axios.get(link, {
 
                 headers: {
@@ -55,10 +55,10 @@ export let crawlEmpireRange1 = async () => {
 
             page++;
             // sleep
-            // await snooze(1000);
+            await snooze(1000);
 
             // } while (data.length > 0)
-        } while (page < 2)
+        } while (page < 4)
 
         // delete with range = 1
         await EmpirePage.destroy({ where: { range: 1 } });
@@ -96,7 +96,7 @@ export let crawlEmpireRange2 = async () => {
     do {
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&auction=yes&price_max_above=15&sort=desc&order=market_value`;
         var result = await axios.get(link, {
 
             headers: {
@@ -185,7 +185,7 @@ export let crawlEmpireRange3 = async () => {
     do {
         var cookieRandom = cookie[Math.floor(Math.random() * cookie.length)];
         console.log(`crawling empire page ${page} with cookie ${cookieRandom.key} `);
-        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&price_max_above=15&sort=desc&order=market_value`;
+        var link = `https://csgoempire.com/api/v2/trading/items?per_page=2500&page=${page}&price_max=1500000&auction=yes&price_max_above=15&sort=desc&order=market_value`;
         var result = await axios.get(link, {
 
             headers: {
