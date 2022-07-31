@@ -34,29 +34,28 @@ export let crawlEmpireRange1 = async () => {
             data = result.data.data;
             for (let i = 0; i < data.length; i++) {
                 var marketname = data[i].market_name;
-                var marketValue;
+                var marketValue = data[i].market_value; 
 
-                if(data[i].auction_highest_bid == null){
-                    marketValue = data[i].market_value;
-                }else{
-                    marketValue = data[i].auction_highest_bid + 1;
-                }
+                // if(data[i].auction_highest_bid == null){
+                //     marketValue = data[i].market_value;
+                // }else{
+                //     marketValue = data[i].auction_highest_bid + 1;
+                // }
 
                 var itemId = data[i].id;
 
-                // var realMarketValue;
-                // if (!data[i].custom_price_percentage) {
-                //     realMarketValue = marketValue / 100;
-                //     console.log(`Realmarketval11111 ${realMarketValue}`);
-                // } else {
-                //     var percent = data[i].custom_price_percentage - 6;
-                //     realMarketValue = (marketValue / 100) / (100 + percent) * 100;
-                //     console.log(`Realmarketval22222222 ${realMarketValue}`);
-                // }
+                var realMarketValue;
+                if (!data[i].custom_price_percentage) {
+                    realMarketValue = marketValue / 100;
+                } else {
+                    var percent = data[i].custom_price_percentage - 6;
+                    // realMarketValue = (marketValue / 100) / (100 + percent) * 100;
+                    realMarketValue = ((100 + percent + 1)  * marketValue) / 100;
+                }
 
-                var priceByVnd = marketValue/100 * parseInt(empirePricing[0].value);
+                var priceByVnd = realMarketValue * parseInt(empirePricing[0].value);
 
-                var empire = { name: marketname, originalPrice: marketValue/100, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
+                var empire = { name: marketname, originalPrice: realMarketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
                 empireItemLs.push(empire);
 
 
