@@ -44,18 +44,27 @@ export let crawlEmpireRange1 = async () => {
 
                 var itemId = data[i].id;
 
+                var auctionNumberBid = data[i].auction_number_of_bids;
+                var p;
+
+                if(auctionNumberBid == null){
+                    p = 0;
+                }else{
+                    p = auctionNumberBid;
+                }
+
                 var realMarketValue;
                 if (!data[i].custom_price_percentage) {
                     realMarketValue = marketValue / 100;
                 } else {
-                    var percent = data[i].custom_price_percentage - 6;
+                    var percent = data[i].custom_price_percentage;
                     // realMarketValue = (marketValue / 100) / (100 + percent) * 100;
-                    realMarketValue = ((100 + percent + 1)  * marketValue/100) / 100;
+                    realMarketValue = Math.round(Math.round(marketValue / (100 + percent)) * (percent + p + 100)/100) 
                 }
 
                 var priceByVnd = realMarketValue * parseInt(empirePricing[0].value);
 
-                var empire = { name: marketname, originalPrice: realMarketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
+                var empire = { name: marketname, originalPrice: realMarketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: realMarketValue, createAt: new Date(), range: 1 };
                 empireItemLs.push(empire);
 
 
