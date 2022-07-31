@@ -45,19 +45,19 @@ export let crawlEmpireRange1 = async () => {
                 console.log(`marketval ${marketValue}`);
                 var itemId = data[i].id;
 
-                var realMarketValue;
-                if (!data[i].custom_price_percentage) {
-                    realMarketValue = marketValue / 100;
-                    console.log(`Realmarketval11111 ${realMarketValue}`);
-                } else {
-                    var percent = data[i].custom_price_percentage - 6;
-                    realMarketValue = (marketValue / 100) / (100 + percent) * 100;
-                    console.log(`Realmarketval22222222 ${realMarketValue}`);
-                }
+                // var realMarketValue;
+                // if (!data[i].custom_price_percentage) {
+                //     realMarketValue = marketValue / 100;
+                //     console.log(`Realmarketval11111 ${realMarketValue}`);
+                // } else {
+                //     var percent = data[i].custom_price_percentage - 6;
+                //     realMarketValue = (marketValue / 100) / (100 + percent) * 100;
+                //     console.log(`Realmarketval22222222 ${realMarketValue}`);
+                // }
 
-                var priceByVnd = realMarketValue * parseInt(empirePricing[0].value);
+                var priceByVnd = marketValue * parseInt(empirePricing[0].value);
 
-                var empire = { name: marketname, originalPrice: realMarketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
+                var empire = { name: marketname, originalPrice: marketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
                 empireItemLs.push(empire);
 
 
