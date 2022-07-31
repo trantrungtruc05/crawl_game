@@ -37,18 +37,22 @@ export let crawlEmpireRange1 = async () => {
                 var marketValue;
 
                 if(data[i].auction_highest_bid == null){
+                    console.log('bid null');
                     marketValue = data[i].market_value;
                 }else{
                     marketValue = data[i].auction_highest_bid + 1;
                 }
+                console.log(`marketval ${marketValue}`);
                 var itemId = data[i].id;
 
                 var realMarketValue;
                 if (!data[i].custom_price_percentage) {
                     realMarketValue = marketValue / 100;
+                    console.log(`Realmarketval11111 ${realMarketValue}`);
                 } else {
                     var percent = data[i].custom_price_percentage - 6;
                     realMarketValue = (marketValue / 100) / (100 + percent) * 100;
+                    console.log(`Realmarketval22222222 ${realMarketValue}`);
                 }
 
                 var priceByVnd = realMarketValue * parseInt(empirePricing[0].value);
