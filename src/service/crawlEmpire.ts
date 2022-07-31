@@ -37,12 +37,11 @@ export let crawlEmpireRange1 = async () => {
                 var marketValue;
 
                 if(data[i].auction_highest_bid == null){
-                    console.log('bid null');
                     marketValue = data[i].market_value;
                 }else{
                     marketValue = data[i].auction_highest_bid + 1;
                 }
-                console.log(`marketval ${marketValue}`);
+
                 var itemId = data[i].id;
 
                 // var realMarketValue;
