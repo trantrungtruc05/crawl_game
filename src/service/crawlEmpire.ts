@@ -54,9 +54,9 @@ export let crawlEmpireRange1 = async () => {
                 //     console.log(`Realmarketval22222222 ${realMarketValue}`);
                 // }
 
-                var priceByVnd = marketValue * parseInt(empirePricing[0].value);
+                var priceByVnd = marketValue/100 * parseInt(empirePricing[0].value);
 
-                var empire = { name: marketname, originalPrice: marketValue, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
+                var empire = { name: marketname, originalPrice: marketValue/100, priceByVnd: Math.round(priceByVnd), itemId: itemId, originalPriceNotPercentage: marketValue / 100, createAt: new Date(), range: 1 };
                 empireItemLs.push(empire);
 
 
