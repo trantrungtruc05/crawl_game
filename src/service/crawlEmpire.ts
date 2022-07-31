@@ -34,7 +34,13 @@ export let crawlEmpireRange1 = async () => {
             data = result.data.data;
             for (let i = 0; i < data.length; i++) {
                 var marketname = data[i].market_name;
-                var marketValue = data[i].market_value;
+                var marketValue;
+
+                if(data[i].auction_highest_bid == null){
+                    marketValue = data[i].market_value;
+                }else{
+                    marketValue = data[i].auction_highest_bid + 1;
+                }
                 var itemId = data[i].id;
 
                 var realMarketValue;
