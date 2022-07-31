@@ -50,7 +50,7 @@ export let crawlEmpireRange1 = async () => {
                 } else {
                     var percent = data[i].custom_price_percentage - 6;
                     // realMarketValue = (marketValue / 100) / (100 + percent) * 100;
-                    realMarketValue = ((100 + percent + 1)  * marketValue) / 100;
+                    realMarketValue = ((100 + percent + 1)  * marketValue/100) / 100;
                 }
 
                 var priceByVnd = realMarketValue * parseInt(empirePricing[0].value);
