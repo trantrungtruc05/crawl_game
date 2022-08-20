@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as crawlEmpireService from './service/crawlEmpire';
 import * as crawlBuffService from './service/crawlBuff';
 import * as crawlEtopPageService from './service/crawlEtop';
+import nodemailer from 'nodemailer';
 
 export let crawlEmpire = async (req, res) => {
     crawlEmpireService.crawlEmpireRange1();
@@ -62,17 +63,25 @@ export let crawlEtopOrderAll = async (req, res) => {
 
 
 export let test = async (req, res) => {
-    console.log('test jquery call api');
+   
+    var transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        auth: {
+            user: 'kyrgiostran@gmail.com',
+            pass: 'kpwqdmgvkjwxobhm'
+        }
+    });
 
-    var s = {truc: 'yeh', zzz: 'ahaha'};
+    var mailOptions = {
+        from: 'kyrgiostran@gmail.com',
+        to: 'hotrongtin90@gmail.com;hominhtrang2021@gmail.com',
+        // to: 'trantrungtruc220691@gmail.com',
+        subject: `Test mail`,
+        text: `Test mail`
+    };
 
-    if(!(s as any).truc){
-        console.log('khong co');
-    }else{
-        console.log('co');
-    }
-
-    console.log( (s as any).trucd );
+    transporter.sendMail(mailOptions);
 
     return res.status(200).send('test_yeh');
 };
