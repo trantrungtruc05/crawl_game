@@ -15,8 +15,25 @@ export let apiWithProxy = async (category, proxy, link, cookie) => {
             }
         });
 
-        return result;
+        return result;  
     } catch (e) {
+        console.log(`${e}`);
+        console.log(`Error when call api crawl with ${category}`);
+        return { data: `error: ${e}`, status: "fail" };
+    }
+};
+
+export let apiNoProxy = async (category, link, cookie) => {
+    try {
+        var result = await axios.get(link, {
+            headers: {
+                'Cookie': cookie[0].value
+            }
+        });
+
+        return result;  
+    } catch (e) {
+        console.log(`${e}`);
         console.log(`Error when call api crawl with ${category}`);
         return { data: `error: ${e}`, status: "fail" };
     }

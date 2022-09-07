@@ -18,17 +18,12 @@ export let crawlBuff = async (category) => {
     // update status running when crawl buff start
     await handleStatus.crawl(479682, 'running');
 
-    var proxyLisy = ['188.74.183.126:8395', '188.74.210.3:6082', '185.199.228.220:7300', '185.199.231.45:8382', '188.74.210.21:6100', '45.155.68.129:8133', '185.199.229.156:7492', '84.21.191.193:7728', '45.95.99.52:7612', '45.95.99.98:7658'];
-
-
     const cookieBuff: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "buff", type: "cookie" } });
     const yuanCurrency: ConfigInfo[] = await ConfigInfo.findAll({ where: { key: "yuan", type: "currency" } });
 
     var totalPageLink = category == 'csgo' ? `https://buff.163.com/api/market/goods?game=csgo&page_num=1&page_size=80&min_price=130&use_suggestion=0&trigger=undefined_trigger&_=${new Date().getTime()}` : `https://buff.163.com/api/market/goods?game=dota2&page_num=1&page_size=80&min_price=10&use_suggestion=0&trigger=undefined_trigger&_=${new Date().getTime()}`;
 
-    var proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
-
-    var totalPageResult = await callApi.apiWithProxy(category, proxy, totalPageLink, cookieBuff);
+    var totalPageResult = await callApi.apiNoProxy(category, totalPageLink, cookieBuff);
     if(totalPageResult.status === 'fail'){
         return;
     }
@@ -39,9 +34,7 @@ export let crawlBuff = async (category) => {
     var totalPageInit = totalPageResult.data.data.total_page;
     var totalPageRealLink = category == 'csgo' ? `https://buff.163.com/api/market/goods?game=csgo&page_num=${totalPageInit}&page_size=80&min_price=130&use_suggestion=0&trigger=undefined_trigger&_=${new Date().getTime()}` : `https://buff.163.com/api/market/goods?game=dota2&page_num=${totalPageInit}&page_size=80&min_price=10&use_suggestion=0&trigger=undefined_trigger&_=${new Date().getTime()}`;
 
-    proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
-
-    var totalPageRealResult = await callApi.apiWithProxy(category, proxy, totalPageRealLink, cookieBuff);
+    var totalPageRealResult = await callApi.apiNoProxy(category, totalPageRealLink, cookieBuff);
     if(totalPageRealResult.status === 'fail'){
         return;
     }
@@ -62,8 +55,7 @@ export let crawlBuff = async (category) => {
         var currentTime = new Date().getTime();
         var getItemLink = category == 'csgo' ? `https://buff.163.com/api/market/goods?game=csgo&page_num=${page}&page_size=80&min_price=130&use_suggestion=0&trigger=undefined_trigger&_=${currentTime}` : `https://buff.163.com/api/market/goods?game=dota2&page_num=${page}&page_size=80&min_price=10&use_suggestion=0&trigger=undefined_trigger&_=${currentTime}`;
 
-        proxy = proxyLisy[Math.floor(Math.random() * proxyLisy.length)];
-        var getItemLinkResult = await callApi.apiWithProxy(category, proxy, getItemLink, cookieBuff);
+        var getItemLinkResult = await callApi.apiNoProxy(category, getItemLink, cookieBuff);
         if(getItemLinkResult.status === 'fail'){
             return;
         }
